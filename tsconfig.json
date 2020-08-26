@@ -19,5 +19,9 @@
         "libs/common/src/*"
       ]
     }
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+  ]
 }

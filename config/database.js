@@ -4,7 +4,7 @@ module.exports = {
     port: process.env.DATA_PORT,
     username: 'root',
     password: '123456',
-    database: 'blog',
+    database: 'prod_blog',
     timezone: '+08:00',
     synchronize: process.env.MYSQL_SYNCHRONIZE,
     logging: true,
