@@ -1,21 +1,25 @@
 # nest_base
 
 nestjs 快速初始化
+
 ## 目录结构
-|-- @types&emsp;主要编写type类型  
-|-- config&emsp;配置文件  
-|-- constants&emsp;全局常亮  
-|-- entities&emsp;数据库实体  
-|-- env&emsp;环境变量  
-|-- libs&emsp;生成libraries工具包  
-&emsp;└─── common  
-|-- repository&emsp;数据库实体仓库  
-|-- src&emsp;工作目录  
-|-- utils&emsp;工具函数包  
-|-- package.json  
-|-- README.md  
-|-- tsconfig.json&emsp;typescript文件配置  
-|-- tsconfig.build.json  
+
+```html
+├── @types  主要编写type类型
+├── README.md
+├── config  配置文件
+├── constants  全局常量
+├── entities  数据库实体
+├── env  环境变量
+├── libs  生成libraries工具包
+├── package.json
+├── repository  数据库实体仓库
+├── src  工作目录
+├── tsconfig.build.json
+├── tsconfig.json  typescript文件配置
+└── utils  工具函数包
+```
+
 ----------------
 
 ## cli命令集合  
