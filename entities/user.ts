@@ -12,13 +12,14 @@ import { PasswordTransformer } from 'utils/password.transformer';
 @Entity('user')
 export class User extends CommonEntity {
     @PrimaryGeneratedColumn()
-    id: string;
+    id: number;
     @Column({
         default: "",
         nullable: false,
     })
     mobile: string
     @Column({
+        select:false,
         transformer: new PasswordTransformer()
     })
     password: string

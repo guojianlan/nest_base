@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { CommonService } from '@libs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm'
@@ -14,6 +14,7 @@ export class AppService {
 
   }
   getHello() {
+
     return this.userRepository.customFind();
     // return this.commonService.getHello() + 'Hello World!';
   }

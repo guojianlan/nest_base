@@ -1,1 +1,0 @@
-declare function CustomSS(c: string): (c: string) => void

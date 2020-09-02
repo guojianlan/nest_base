@@ -5,8 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import * as path from 'path'
 import * as entities from 'entities';
 import * as Repository from 'repository'
+
 const ENV = process.env.NODE_ENV;
-const models = TypeOrmModule.forFeature([...Object.values(entities),...Object.values(Repository)]);
+const models = TypeOrmModule.forFeature([...Object.values(entities), ...Object.values(Repository)]);
 @Global()
 @Module({
   imports: [

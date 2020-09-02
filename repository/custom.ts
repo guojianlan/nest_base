@@ -33,5 +33,16 @@ export class CustomRepository<T> extends Repository<T>{
         })
         return this.find(options)
     }
+    customFindAndCount(options?: FindManyOptions<T>) {
+        if (options == undefined) {
+            options = {}
+        }
+        options = merge(options, {
+            where: {
+                delete_at: Equal(0)
+            }
+        })
 
+        return this.findAndCount(options)
+    }
 }

@@ -2,7 +2,8 @@ import { CreateDateColumn, UpdateDateColumn, DeleteDateColumn, Column } from 'ty
 
 export abstract class CommonEntity {
   @Column({
-    default: 0
+    default: 0,
+    select: false
   })
   create_at: number;
   @Column({
@@ -10,7 +11,8 @@ export abstract class CommonEntity {
   })
   update_at: number;
   @Column({
-    default: 0
+    default: 0,
+    select: false
   })
   delete_at: number;
 }
