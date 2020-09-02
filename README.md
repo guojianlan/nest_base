@@ -137,11 +137,15 @@ const models = TypeOrmModule.forFeature([...Object.values(entities)]);
 6.往公共模块添加 redis,首先添加 nestjs-redis 模块
 
 ```js
+npm install nestjs-redis -S
+import { RedisModule } from 'nestjs-redis';
  RedisModule.forRootAsync({
       useFactory: (config: ConfigService) => config.get('redis'),
       inject: [ConfigService],
     }),
     //然后在commonService封装redis操作
+    import { RedisService } from 'nestjs-redis';
+    constructor(private readonly redis: RedisService) {}
 ```
 
 7.添加密码框转换函数，新增 utils 文件夹，新增 passowrdtransformer 类，引入 bcrypt 加密类, npm install bcrypt -S，封装到 commomSerive 的静态方法里，全局可以调用
@@ -256,7 +260,6 @@ export const TokenValue = createParamDecorator(
 export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 ```
 
-
 ## 一些问题描述
 
 如果不需要自动生成 spec 文件，在 nest-cli.json 添加一下代码，或者生成代码的时候添加 --spec false
@@ -265,4 +268,166 @@ export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 "generateOptions": {
     "spec": false
   },
+```  
+
+### mysql实体设置,关系设置，以博客为例  
+
+---
+
+一对一关系 user=>user_github
+
+```js
+//主要是转换，
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    PrimaryColumn,
+    ValueTransformer,
+    OneToMany,
+    OneToOne,
+    JoinColumn
+} from 'typeorm';
+import { CommonEntity } from './common';
+import { PasswordTransformer } from 'utils/password.transformer';
+import { UserGithub } from './user_github';
+@Entity('user')
+export class User extends CommonEntity {
+    @PrimaryGeneratedColumn()
+    id: number;
+    @Column({
+        default: "",
+        nullable: false,
+    })
+    mobile: string
+    @Column({
+        select: false,
+        transformer: new PasswordTransformer()
+    })
+    password: string
+    @Column({
+        default: 0,
+        select: false,
+    })
+    github_id!: number
+    @OneToOne(type => UserGithub)
+    @JoinColumn({
+        name: "github_id",
+    })
+    githubMeta: UserGithub
+}
+//user_github 
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
+@Entity('user_github')
+export class UserGithub {
+    @PrimaryGeneratedColumn()
+    id: number;
+    @Column({
+        default: ""
+    })
+    name: number
+}
+
 ```
+
+---
+
+多对一和多对多，多个文章对应一个类型，一种类型拥有多个文章，多个文章有多个标签，多个标签属于多个文章
+```js
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    PrimaryColumn,
+    ValueTransformer,
+    OneToMany,
+    OneToOne,
+    ManyToOne,
+    JoinColumn,
+    ManyToMany,
+    JoinTable
+} from 'typeorm';
+import { CommonEntity } from './common';
+import { Category } from './category';
+import { Tag } from './tag'
+@Entity('article')
+export class Article extends CommonEntity {
+    @PrimaryGeneratedColumn()
+    id: number;
+    @Column()
+    user_id: string
+    @Column()
+    title: string
+    @Column()
+    description: string
+    @Column({
+        select: false
+    })
+    category_id: number
+    @ManyToOne(type => Category)
+    @JoinColumn({
+        name: 'category_id'
+    })
+    category: Category
+    @ManyToMany(type => Tag)
+    @JoinTable({
+        name: 'article_tag',
+        joinColumn: {
+            name: "article_id",
+            referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+            name: "tag_id",
+            referencedColumnName: 'id',
+        }
+    })
+    tags: Tag[]
+}
+///Tag
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    PrimaryColumn,
+    ValueTransformer,
+    OneToMany,
+    OneToOne,
+    ManyToOne,
+    ManyToMany,
+    JoinTable
+} from 'typeorm';
+import { CommonEntity } from './common';
+import { Article } from './article';
+@Entity('tag')
+export class Tag extends CommonEntity {
+    @PrimaryGeneratedColumn()
+    id: number;
+    @Column()
+    name: string
+    @ManyToMany(type => Article)
+    articles: Article[]
+}
+// category
+import {
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    PrimaryColumn,
+    ValueTransformer,
+    OneToMany,
+    OneToOne,
+    ManyToOne
+} from 'typeorm';
+import { CommonEntity } from './common';
+@Entity('category')
+export class Category extends CommonEntity {
+    @PrimaryGeneratedColumn()
+    id: number;
+    @Column()
+    name: string
+}
+```  

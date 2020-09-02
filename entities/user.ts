@@ -5,7 +5,8 @@ import {
     PrimaryColumn,
     ValueTransformer,
     OneToMany,
-    OneToOne
+    OneToOne,
+    JoinColumn
 } from 'typeorm';
 import { CommonEntity } from './common';
 import { PasswordTransformer } from 'utils/password.transformer';
@@ -19,7 +20,7 @@ export class User extends CommonEntity {
     })
     mobile: string
     @Column({
-        select:false,
+        select: false,
         transformer: new PasswordTransformer()
     })
     password: string
